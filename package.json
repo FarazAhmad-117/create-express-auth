@@ -1,0 +1,36 @@
+{
+  "name": "express-auth-starter",
+  "version": "1.0.0",
+  "description": "An auth template to easily startup your express backend project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Express",
+    "Authentication",
+    "Passport",
+    "Starter-Tamplate"
+  ],
+  "author": "Faraz Ahmad",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.4",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.9.16",
+    "passport": "^0.7.0",
+    "passport-facebook": "^3.0.0",
+    "passport-github": "^1.1.0",
+    "passport-google-oauth20": "^2.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
