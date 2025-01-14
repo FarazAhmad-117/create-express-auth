@@ -63,11 +63,10 @@ Here’s an organized project structure to help you navigate the codebase:
 
 Follow these steps to get this project up and running:
 
-### 1. **Clone the Repository**
+### 1. **Create Project**
 
 ```bash
-git clone https://github.com/FarazAhmad-117/auth-system-starter.git
-cd auth-system-starter
+npx create-express-auth-starter
 ```
 
 ### 2. **Install Dependencies**
@@ -134,14 +133,14 @@ CLIENT_URL=http://localhost:3000 # Replace with your frontend URL
 
 ### 6. **Get Facebook ENVs**
 
-### 7. **Start the Server**
+### 7. **Start the Server in development mode**
 
 ```bash
-npm start
+npm run dev
 # or
-yarn start
+yarn dev
 # or
-pnpm start
+pnpm run dev
 ```
 
 The server will start on `http://localhost:5000`.
@@ -190,20 +189,6 @@ To make this project available to the public as a package:
     "license": "MIT"
   }
   ```
-
-### 2. **Login to NPM**
-
-```bash
-npm login
-```
-
-### 3. **Publish the Package**
-
-```bash
-npm publish
-```
-
-For PNPM and Yarn, follow their respective guidelines for publishing. The process is similar to NPM.
 
 ---
 
