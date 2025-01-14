@@ -103,7 +103,38 @@ APPLE_CLIENT_SECRET=your-apple-client-secret
 CLIENT_URL=http://localhost:3000 # Replace with your frontend URL
 ```
 
-### 4. **Start the Server**
+### 4. **Get Google ENVs**
+
+- Go to [https://console.cloud.google.com/apis/dashboard](https://console.cloud.google.com/apis/dashboard)
+- Click on create New Project
+  ![Image](/assets/google_new_project.png)
+- Give a name
+  ![Image](/assets/give_name.png)
+- Go to the project's dashboard using this dropdown
+  ![Image](/assets/google_project_dashboard.png)
+- Go to Library Section and search for Google People API and enable it
+  ![Image](/assets/google_search_api.png)
+- Go to the credentials and click on create credentials
+  ![Image](/assets/create_creds_google.png)
+- Click on OAuth Client ID and then on Configure Consent Screen
+  ![Image](/assets/oauth_creds_and_consent_screen.png)
+- Click on External and then create
+  ![Image](/assets/click_external_google.png)
+- Configure your app
+  ![Image](/assets/configure_app_google.png)
+- Once set Now go to the same Create OAuth Client ID Again this time you will be able to create the application
+  ![Image](/assets/create_web_app_google.png)
+- Add the redirect url as given
+  ![Image](/assets/add_redirect_url_as.png)
+- Now Copy and Paste
+  ![Image](/assets/google_copy_and_paste.png)
+- You can hit the google auth by GET Request over [http://localhost:5000/api/auth/google](http://localhost:5000/api/auth/google)
+
+### 5. **Get Github ENVs**
+
+### 6. **Get Facebook ENVs**
+
+### 7. **Start the Server**
 
 ```bash
 npm start

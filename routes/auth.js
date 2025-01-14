@@ -70,7 +70,64 @@ router.post("/signup", signUp);
  */
 router.post("/signin", signIn);
 
-// Email verification
+/**
+ * @swagger
+ * /api/auth/verify-email/{token}:
+ *   get:
+ *     summary: Verify email address
+ *     description: Verifies the user's email address using the token provided in the URL. Marks the user as verified if the token is valid.
+ *     tags: [Authentication]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Verification token sent to the user's email.
+ *     responses:
+ *       200:
+ *         description: Email verified successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Email verified successfully.
+ *       400:
+ *         description: Invalid or expired token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Invalid token.
+ *       500:
+ *         description: Internal server error during verification.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Verification failed.
+ *                 error:
+ *                   type: string
+ *                   example: Error message here.
+ */
 router.get("/verify-email/:token", verifyEmail);
 
 // OAuth Routes
@@ -89,7 +146,5 @@ router.get(
 
 router.get("/github", passport.authenticate("github"));
 router.get("/github/callback", passport.authenticate("github"), oauthCallback);
-
-// Additional providers can be added similarly...
 
 module.exports = router;

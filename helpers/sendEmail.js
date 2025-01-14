@@ -11,10 +11,15 @@ const sendEmail = async (to, subject, html) => {
   try {
     // Create a transporter
     const transporter = nodemailer.createTransport({
-      service: "Gmail", // You can change to any other email service
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER, // Email from .env
         pass: process.env.EMAIL_PASSWORD, // Email password from .env
+      },
+      tls: {
+        rejectUnauthorized: false, // Ignore certificate errors
       },
     });
 

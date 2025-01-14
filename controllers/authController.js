@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 const sendEmail = require("../helpers/sendEmail");
 
 // Local sign-up
@@ -92,7 +91,7 @@ exports.signIn = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
 
     res.json({ success: true, token, user });
@@ -107,29 +106,5 @@ exports.signIn = async (req, res) => {
 
 // Handle OAuth Sign-Ins (common for all providers)
 exports.oauthCallback = async (req, res) => {
-  try {
-    const { provider, profile } = req;
-
-    const existingUser = await User.findOne({
-      providerId: profile.id,
-      provider,
-    });
-    if (existingUser)
-      return res.redirect(`${process.env.CLIENT_URL}/dashboard`);
-
-    const newUser = await User.create({
-      name: profile.displayName,
-      email: profile.emails[0].value,
-      avatar: profile.photos[0].value,
-      provider,
-      providerId: profile.id,
-    });
-
-    res.redirect(`${process.env.CLIENT_URL}/dashboard`);
-  } catch (err) {
-    console.error("OAuth callback error:", err);
-    res
-      .status(500)
-      .json({ success: false, message: "OAuth error", error: err.message });
-  }
+  res.redirect(`${process.env.CLIENT_URL}/dashboard`);
 };
