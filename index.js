@@ -1,62 +1,100 @@
-require("dotenv").config();
-const express = require("express");
-const session = require("express-session");
-const passport = require("passport");
-const connectDB = require("./config/db");
-const authRoutes = require("./routes/auth");
-const swaggerJsDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
-const connectRoutes = require("./routes/connectRoutes");
-const MongoStore = require("connect-mongo");
-const app = express();
+#!/usr/bin/env node
 
-// Connect to MongoDB
-connectDB();
+const path = require("path");
+const fs = require("fs");
+const readline = require("readline");
+const { execSync } = require("child_process");
 
-// Applying sessions middleware to enable social sessions
-app.use(
-  session({
-    secret: process.env.JWT_SECRET || "your_secret_key",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI, // Use your MongoDB URI
-      ttl: 14 * 24 * 60 * 60, // Session expiration in seconds (14 days by default)
-    }),
-    cookie: {
-      secure: false, // Set true if using HTTPS
-      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days in milliseconds
-    },
-  })
-);
+// Function to prompt for input
+function promptForProjectName() {
+  return new Promise((resolve, reject) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
 
-// Middleware
-app.use(express.json());
-app.use(passport.initialize());
-require("./config/passport");
+    rl.question("Enter the project name: ", (projectName) => {
+      rl.close();
+      resolve(projectName);
+    });
+  });
+}
 
-// Routes
-connectRoutes(app);
+// Main function to create the project
+async function createProject() {
+  // If no project name is provided as an argument, prompt the user for one
+  let projectName = process.argv[2];
 
-// Swagger setup
-const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Auth API",
-      version: "1.0.0",
-      description: "Authentication API with multiple methods",
-    },
-  },
-  apis: ["./routes/*.js"], // Path to the API docs
-};
+  if (!projectName) {
+    projectName = await promptForProjectName();
+  }
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+  // Exit if no project name is provided
+  if (!projectName) {
+    console.error("Error: You must specify a project name.");
+    process.exit(1);
+  }
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(
-    `Server running on port ${PORT}. You can check documentation at http://localhost:${PORT}/api-docs`
-  )
-);
+  // Define the template directory path
+  const templateDir = path.join(__dirname, "template");
+  const targetDir = path.join(process.cwd(), projectName);
+
+  // Check if the project directory already exists
+  if (fs.existsSync(targetDir)) {
+    console.error(`Error: The directory "${projectName}" already exists.`);
+    process.exit(1);
+  }
+
+  // Function to copy the template files and folders recursively
+  function copyTemplate(src, dest) {
+    const files = fs.readdirSync(src);
+
+    files.forEach((file) => {
+      const currentPath = path.join(src, file);
+      const newPath = path.join(dest, file);
+
+      if (fs.lstatSync(currentPath).isDirectory()) {
+        // If it's a directory, create it in the target location
+        fs.mkdirSync(newPath);
+        // Recursively copy the contents of this directory
+        copyTemplate(currentPath, newPath);
+      } else {
+        // If it's a file, copy it to the target location
+        fs.copyFileSync(currentPath, newPath);
+      }
+    });
+  }
+
+  // Function to initialize npm in the new directory
+  function initializeNpm() {
+    try {
+      console.log("Initializing npm...");
+      execSync("npm init -y", { cwd: targetDir, stdio: "inherit" });
+
+      // Install dependencies
+      console.log("Installing dependencies...");
+      execSync("npm install", { cwd: targetDir, stdio: "inherit" });
+    } catch (err) {
+      console.error(`Error: Failed to initialize npm: ${err.message}`);
+      process.exit(1);
+    }
+  }
+
+  // Function to create the new project
+  try {
+    // Create the new directory
+    fs.mkdirSync(targetDir);
+
+    // Copy the template directory contents to the new project folder
+    copyTemplate(templateDir, targetDir);
+
+    console.log(`Successfully created ${projectName} at ${targetDir}`);
+    initializeNpm();
+  } catch (err) {
+    console.error(`Error: Failed to create project: ${err.message}`);
+    process.exit(1);
+  }
+}
+
+// Run the project creation
+createProject();
