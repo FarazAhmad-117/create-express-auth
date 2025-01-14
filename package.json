@@ -1,6 +1,6 @@
 {
     "name": "create-express-auth",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "A template for creating Express authentication starter projects",
     "bin": {
         "create-express-auth": "./index.js"
