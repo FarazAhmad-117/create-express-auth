@@ -1,5 +1,5 @@
 {
-    "name": "create-express-auth",
+    "name": "create-express-auth-starter",
     "version": "2.0.0",
     "description": "A template for creating Express authentication starter projects",
     "bin": {
